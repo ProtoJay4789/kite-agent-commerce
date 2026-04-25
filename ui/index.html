@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kAI-Commerce | Kite AI Hackathon</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.0/ethers.umd.min.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <div class="max-w-4xl mx-auto p-6">
+    <header class="mb-8 border-b border-slate-800 pb-4">
+      <h1 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+        kAI-Commerce
+      </h1>
+      <p class="text-slate-400 mt-1">Agentic escrow + dynamic token payments on Kite AI Testnet</p>
+    </header>
+
+    <section class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
+        <div class="text-xs text-slate-500 uppercase tracking-wide">Network</div>
+        <div class="text-lg font-semibold text-cyan-400">Kite AI Testnet</div>
+        <div class="text-xs text-slate-500">Chain ID 2368</div>
+      </div>
+      <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
+        <div class="text-xs text-slate-500 uppercase tracking-wide">Wallet</div>
+        <div id="walletAddr" class="text-sm font-mono text-slate-300 truncate">Not connected</div>
+        <button id="connectBtn" class="mt-2 px-3 py-1 text-xs bg-cyan-600 hover:bg-cyan-500 rounded transition">Connect</button>
+      </div>
+      <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
+        <div class="text-xs text-slate-500 uppercase tracking-wide">KITE Balance</div>
+        <div id="balance" class="text-lg font-semibold text-emerald-400">—</div>
+      </div>
+    </section>
+
+    <section class="mb-6 bg-slate-900 rounded-lg p-5 border border-slate-800">
+      <h2 class="text-lg font-semibold mb-3 text-slate-200">Contracts</h2>
+      <div class="space-y-2 text-sm font-mono">
+        <div class="flex justify-between border-b border-slate-800 pb-2">
+          <span class="text-slate-400">AgentEscrow</span>
+          <span id="escrowAddr" class="text-cyan-300">Pending deployment</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-2">
+          <span class="text-slate-400">TECHPaymentRouter</span>
+          <span id="routerAddr" class="text-cyan-300">Pending deployment</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-2">
+          <span class="text-slate-400">MockTECH</span>
+          <span id="techAddr" class="text-cyan-300">Pending deployment</span>
+        </div>
+        <div class="flex justify-between pt-1">
+          <span class="text-slate-400">USDC</span>
+          <span class="text-slate-300">0x2d16C0dc617dCF743f55A3bB42fDE4A0E640A5b5</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-6 bg-slate-900 rounded-lg p-5 border border-slate-800">
+      <h2 class="text-lg font-semibold mb-3 text-slate-200">Create Escrow</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <input id="sellerIn" type="text" placeholder="Seller address" class="bg-slate-950 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-cyan-500" />
+        <input id="amountIn" type="number" placeholder="Amount (USDC units)" class="bg-slate-950 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-cyan-500" />
+        <button id="createEscrowBtn" class="bg-cyan-700 hover:bg-cyan-600 rounded px-4 py-2 text-sm font-medium transition">Create Escrow</button>
+      </div>
+      <div id="escrowOut" class="mt-2 text-xs text-slate-400 font-mono"></div>
+    </section>
+
+    <section class="mb-6 bg-slate-900 rounded-lg p-5 border border-slate-800">
+      <h2 class="text-lg font-semibold mb-3 text-slate-200">Actions</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="space-y-2">
+          <input id="escrowId1" type="number" placeholder="Escrow ID" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-sm" />
+          <button id="markCompleteBtn" class="w-full bg-emerald-700 hover:bg-emerald-600 rounded px-4 py-2 text-sm font-medium transition">Mark Complete</button>
+        </div>
+        <div class="space-y-2">
+          <input id="escrowId2" type="number" placeholder="Escrow ID" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-sm" />
+          <button id="validateBtn" class="w-full bg-blue-700 hover:bg-blue-600 rounded px-4 py-2 text-sm font-medium transition">Validate & Release</button>
+        </div>
+        <div class="space-y-2">
+          <input id="escrowId3" type="number" placeholder="Escrow ID" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-sm" />
+          <button id="refundBtn" class="w-full bg-rose-700 hover:bg-rose-600 rounded px-4 py-2 text-sm font-medium transition">Refund</button>
+        </div>
+      </div>
+      <div id="actionOut" class="mt-2 text-xs text-slate-400 font-mono"></div>
+    </section>
+
+    <section class="bg-slate-900 rounded-lg p-5 border border-slate-800">
+      <h2 class="text-lg font-semibold mb-3 text-slate-200">Pay with $TECH</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <input id="techAmount" type="number" placeholder="TECH amount" class="bg-slate-950 border border-slate-700 rounded px-3 py-2 text-sm" />
+        <button id="payTechBtn" class="bg-violet-700 hover:bg-violet-600 rounded px-4 py-2 text-sm font-medium transition">Process Payment</button>
+        <button id="mintTechBtn" class="bg-slate-700 hover:bg-slate-600 rounded px-4 py-2 text-sm font-medium transition">Mint TECH (demo)</button>
+      </div>
+      <div id="techOut" class="mt-2 text-xs text-slate-400 font-mono"></div>
+    </section>
+
+    <footer class="mt-8 text-center text-xs text-slate-600">
+      GenTech Labs · Kite AI Global Hackathon 2026 · <a href="https://github.com/ProtoJay4789/kite-agent-commerce" class="underline hover:text-slate-400">GitHub</a>
+    </footer>
+  </div>
+
+  <script>
+    const KITE_RPC = "https://rpc-testnet.gokite.ai/";
+    const USDC = "0x2d16C0dc617dCF743f55A3bB42fDE4A0E640A5b5";
+    let provider, signer, userAddr;
+    let escrowAddr, routerAddr, techAddr;
+
+    const ESCROW_ABI = [
+      "function createEscrow(address _seller, uint256 _amount) external returns (uint256 id)",
+      "function markComplete(uint256 _escrowId) external",
+      "function validateAndRelease(uint256 _escrowId, bytes calldata _signature) external",
+      "function refund(uint256 _escrowId) external",
+      "function getEscrow(uint256 _escrowId) external view returns (address buyer, address seller, uint256 amount, uint256 deadline, uint8 state, uint256 createdAt)",
+      "event EscrowCreated(uint256 indexed id, address indexed buyer, address indexed seller, uint256 amount)"
+    ];
+    const ROUTER_ABI = [
+      "function processPayment(uint256 amount) external",
+      "function calculateTechAmount(uint256 usdcPrice, uint256 techPriceUsd) public view returns (uint256 techAmount)",
+      "function burnRatioBps() view returns (uint256)",
+      "function discountBps() view returns (uint256)"
+    ];
+    const TECH_ABI = [
+      "function mint(address to, uint256 amount) external",
+      "function balanceOf(address account) view returns (uint256)",
+      "function approve(address spender, uint256 amount) external returns (bool)"
+    ];
+
+    document.getElementById('connectBtn').onclick = async () => {
+      if (!window.ethereum) {
+        alert('Please install MetaMask or a Kite-compatible wallet');
+        return;
+      }
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      provider = new ethers.BrowserProvider(window.ethereum);
+      signer = await provider.getSigner();
+      userAddr = await signer.getAddress();
+      document.getElementById('walletAddr').textContent = userAddr;
+      const bal = await provider.getBalance(userAddr);
+      document.getElementById('balance').textContent = ethers.formatEther(bal).slice(0,6) + ' KITE';
+    };
+
+    function out(id, msg) { document.getElementById(id).textContent = msg; }
+
+    document.getElementById('createEscrowBtn').onclick = async () => {
+      if (!signer) return alert('Connect wallet first');
+      if (!escrowAddr) return alert('Escrow contract not deployed yet');
+      const escrow = new ethers.Contract(escrowAddr, ESCROW_ABI, signer);
+      const seller = document.getElementById('sellerIn').value;
+      const amount = document.getElementById('amountIn').value;
+      const tx = await escrow.createEscrow(seller, amount);
+      out('escrowOut', 'Tx: ' + tx.hash);
+      const rec = await tx.wait();
+      const ev = rec.logs.find(l => l.fragment?.name === 'EscrowCreated');
+      if (ev) out('escrowOut', 'Escrow ID: ' + ev.args[0] + ' | Tx: ' + tx.hash);
+    };
+
+    document.getElementById('markCompleteBtn').onclick = async () => {
+      if (!signer || !escrowAddr) return alert('Not ready');
+      const id = document.getElementById('escrowId1').value;
+      const escrow = new ethers.Contract(escrowAddr, ESCROW_ABI, signer);
+      const tx = await escrow.markComplete(id);
+      out('actionOut', 'Marked complete | Tx: ' + tx.hash);
+    };
+
+    document.getElementById('validateBtn').onclick = async () => {
+      if (!signer || !escrowAddr) return alert('Not ready');
+      const id = document.getElementById('escrowId2').value;
+      const escrow = new ethers.Contract(escrowAddr, ESCROW_ABI, signer);
+      const tx = await escrow.validateAndRelease(id, '0x');
+      out('actionOut', 'Validated & released | Tx: ' + tx.hash);
+    };
+
+    document.getElementById('refundBtn').onclick = async () => {
+      if (!signer || !escrowAddr) return alert('Not ready');
+      const id = document.getElementById('escrowId3').value;
+      const escrow = new ethers.Contract(escrowAddr, ESCROW_ABI, signer);
+      const tx = await escrow.refund(id);
+      out('actionOut', 'Refunded | Tx: ' + tx.hash);
+    };
+
+    document.getElementById('payTechBtn').onclick = async () => {
+      if (!signer || !routerAddr) return alert('Not ready');
+      const amount = document.getElementById('techAmount').value;
+      const router = new ethers.Contract(routerAddr, ROUTER_ABI, signer);
+      const tx = await router.processPayment(amount);
+      out('techOut', 'Payment processed | Tx: ' + tx.hash);
+    };
+
+    document.getElementById('mintTechBtn').onclick = async () => {
+      if (!signer || !techAddr) return alert('Not ready');
+      const tech = new ethers.Contract(techAddr, TECH_ABI, signer);
+      const tx = await tech.mint(userAddr, ethers.parseEther('1000'));
+      out('techOut', 'Minted 1000 TECH | Tx: ' + tx.hash);
+    };
+
+    const qp = new URLSearchParams(location.search);
+    escrowAddr = qp.get('escrow') || localStorage.getItem('escrowAddr');
+    routerAddr = qp.get('router') || localStorage.getItem('routerAddr');
+    techAddr   = qp.get('tech')   || localStorage.getItem('techAddr');
+    if (escrowAddr) { document.getElementById('escrowAddr').textContent = escrowAddr; localStorage.setItem('escrowAddr', escrowAddr); }
+    if (routerAddr) { document.getElementById('routerAddr').textContent = routerAddr; localStorage.setItem('routerAddr', routerAddr); }
+    if (techAddr)   { document.getElementById('techAddr').textContent = techAddr; localStorage.setItem('techAddr', techAddr); }
+  </script>
+</body>
+</html>

@@ -47,10 +47,32 @@ Agentic Commerce is a smart contract suite enabling autonomous agents to transac
 
 | Contract | Purpose | Lines | Tests |
 |---|---|---|---|
-| `AgentEscrow.sol` | USDC escrow with AI validation + EIP-712 signatures | ~200 | 20 ✅ |
-| `TECHPaymentRouter.sol` | Dual $TECH payment router (burn + treasury) | ~150 | 29 ✅ |
+| `AgentEscrow.sol` | USDC escrow with AI validation + EIP-712 signatures | ~240 | 20 ✅ |
+| `TECHPaymentRouter.sol` | Dual $TECH payment router (burn + treasury) | ~160 | 29 ✅ |
+| `MockTECH.sol` | Faucetable testnet $TECH token (for demo) | ~20 | 3 ✅ |
 
-**Total: 49/49 tests passing**
+**Total: 52/52 tests passing**
+
+---
+
+## Kite Testnet Deployment (Chain ID 2368)
+
+| Contract | Address | Status |
+|---|---|---|
+| AgentEscrow | TBD — run deploy script | ⏳ Pending gas |
+| TECHPaymentRouter | TBD — run deploy script | ⏳ Pending gas |
+| MockTECH | TBD — run deploy script | ⏳ Pending gas |
+| USDC | `0x2d16C0dc617dCF743f55A3bB42fDE4A0E640A5b5` | ✅ Verified |
+
+**Deploy command:**
+```bash
+cp .env.example .env
+# Fill in DEPLOYER_PRIVATE_KEY (testnet only!)
+source .env
+forge script scripts/Deploy.s.sol --rpc-url $KITE_RPC_URL --broadcast -vvvv
+```
+
+**Live UI:** [Vercel deployment pending] — static demo at `ui/index.html`
 
 ---
 
@@ -88,12 +110,15 @@ forge script scripts/Deploy.s.sol --rpc-url https://rpc-testnet.gokite.ai/ --bro
 ## Kite AI Integration Roadmap
 
 - [x] Core escrow + payment router contracts
-- [x] Comprehensive test suite (49 tests)
-- [ ] Deploy to Kite testnet (Chain ID 2368)
+- [x] Comprehensive test suite (52 tests)
+- [x] MockTECH token for testnet demo
+- [x] Foundry deployment script for Kite testnet
+- [x] Minimal UI (`ui/index.html`)
+- [ ] Deploy to Kite testnet (pending gas tokens)
 - [ ] Agent Passport integration (ERC-8004)
 - [ ] GoKite AA SDK + gasless USDC transfers (EIP-3009)
 - [ ] x402 payment middleware for HTTP-native agent payments
-- [ ] React dashboard for agent transaction monitoring
+- [ ] Vercel deployment for live demo
 
 ---
 
