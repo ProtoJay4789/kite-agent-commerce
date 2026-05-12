@@ -38,15 +38,15 @@
       <div class="space-y-2 text-sm font-mono">
         <div class="flex justify-between border-b border-slate-800 pb-2">
           <span class="text-slate-400">AgentEscrow</span>
-          <span id="escrowAddr" class="text-cyan-300">Pending deployment</span>
+          <span id="escrowAddr" class="text-cyan-300">0xf7DcebAEC0356c96926a6619Fc80F24590932F06</span>
         </div>
         <div class="flex justify-between border-b border-slate-800 pb-2">
           <span class="text-slate-400">TECHPaymentRouter</span>
-          <span id="routerAddr" class="text-cyan-300">Pending deployment</span>
+          <span id="routerAddr" class="text-cyan-300">0x963Cb46670c4F13C2dbB3a10BEE49BBb3650AC14</span>
         </div>
         <div class="flex justify-between border-b border-slate-800 pb-2">
           <span class="text-slate-400">MockTECH</span>
-          <span id="techAddr" class="text-cyan-300">Pending deployment</span>
+          <span id="techAddr" class="text-cyan-300">0x2C7DE7F6C149808E66B87cE138fdDb00dDAf085E</span>
         </div>
         <div class="flex justify-between pt-1">
           <span class="text-slate-400">USDC</span>
@@ -103,7 +103,9 @@
     const KITE_RPC = "https://rpc-testnet.gokite.ai/";
     const USDC = "0x2d16C0dc617dCF743f55A3bB42fDE4A0E640A5b5";
     let provider, signer, userAddr;
-    let escrowAddr, routerAddr, techAddr;
+    let escrowAddr = "0xf7DcebAEC0356c96926a6619Fc80F24590932F06";
+    let routerAddr = "0x963Cb46670c4F13C2dbB3a10BEE49BBb3650AC14";
+    let techAddr = "0x2C7DE7F6C149808E66B87cE138fdDb00dDAf085E";
 
     const ESCROW_ABI = [
       "function createEscrow(address _seller, uint256 _amount) external returns (uint256 id)",
