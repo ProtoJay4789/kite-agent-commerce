@@ -76,6 +76,49 @@ forge script scripts/Deploy.s.sol --rpc-url $KITE_RPC_URL --broadcast -vvvv
 
 ---
 
+## AI Agent System
+
+This project includes a **multi-agent commerce system** that demonstrates autonomous AI agents performing tasks and settling payments on-chain.
+
+### Agent Architecture
+
+| Agent | Role | Function |
+|---|---|---|
+| `BuyerAgent` | Service Consumer | Creates escrow, locks USDC payment |
+| `ProviderAgent` | Service Provider | Performs tasks (market analysis, data fetching) |
+| `ValidatorAgent` | AI Validator | Verifies work quality, signs EIP-712 approval |
+
+### On-Chain Flow
+
+```
+BuyerAgent ──create_escrow()──→ AgentEscrow (USDC locked)
+ProviderAgent ──perform_task()──→ Real work executed
+ProviderAgent ──mark_complete()──→ AgentEscrow (state: Completed)
+ValidatorAgent ──verify() + sign()──→ EIP-712 signature
+ValidatorAgent ──validateAndRelease()──→ AgentEscrow (USDC → Provider)
+```
+
+### Run the Demo
+
+```bash
+# Simulated mode (no blockchain needed)
+python3 agent/run_demo.py --simulate
+
+# Live mode (requires .env with DEPLOYER_PRIVATE_KEY)
+python3 agent/run_demo.py
+```
+
+### What the Agent Does
+
+1. **Buyer Agent** requests a market analysis service and creates an escrow with 10 USDC
+2. **Provider Agent** fetches real-time crypto prices from CoinGecko API and generates a composite analysis report
+3. **Validator Agent** verifies the report quality (data completeness, timestamps, price accuracy) and generates an EIP-712 signature
+4. Funds are **released on-chain** to the provider upon successful validation
+
+This satisfies the Kite AI hackathon requirement: *"Shows an AI agent that performs a task and settles on Kite chain."*
+
+---
+
 ## Stack
 
 - **Smart Contracts:** Solidity 0.8.20+ (Foundry)
@@ -115,7 +158,7 @@ forge script scripts/Deploy.s.sol --rpc-url https://rpc-testnet.gokite.ai/ --bro
 - [x] Foundry deployment script for Kite testnet
 - [x] Minimal UI (`ui/index.html`)
 - [x] Deploy to Kite testnet (Chain ID 2368) ✅
-- [ ] Agent Passport integration (ERC-8004)
+- [x] Agent system with Buyer, Provider, and Validator agents
 - [ ] GoKite AA SDK + gasless USDC transfers (EIP-3009)
 - [ ] x402 payment middleware for HTTP-native agent payments
 - [ ] Vercel deployment for live demo
