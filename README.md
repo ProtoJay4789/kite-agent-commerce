@@ -59,9 +59,9 @@ Agentic Commerce is a smart contract suite enabling autonomous agents to transac
 
 | Contract | Address | Status |
 |---|---|---|
-| AgentEscrow | TBD — run deploy script | ⏳ Pending gas |
-| TECHPaymentRouter | TBD — run deploy script | ⏳ Pending gas |
-| MockTECH | TBD — run deploy script | ⏳ Pending gas |
+| AgentEscrow | `0xf7DcebAEC0356c96926a6619Fc80F24590932F06` | ✅ Deployed |
+| TECHPaymentRouter | `0x963Cb46670c4F13C2dbB3a10BEE49BBb3650AC14` | ✅ Deployed |
+| MockTECH | `0x2C7DE7F6C149808E66B87cE138fdDb00dDAf085E` | ✅ Deployed |
 | USDC | `0x2d16C0dc617dCF743f55A3bB42fDE4A0E640A5b5` | ✅ Verified |
 
 **Deploy command:**
@@ -114,7 +114,7 @@ forge script scripts/Deploy.s.sol --rpc-url https://rpc-testnet.gokite.ai/ --bro
 - [x] MockTECH token for testnet demo
 - [x] Foundry deployment script for Kite testnet
 - [x] Minimal UI (`ui/index.html`)
-- [ ] Deploy to Kite testnet (pending gas tokens)
+- [x] Deploy to Kite testnet (Chain ID 2368) ✅
 - [ ] Agent Passport integration (ERC-8004)
 - [ ] GoKite AA SDK + gasless USDC transfers (EIP-3009)
 - [ ] x402 payment middleware for HTTP-native agent payments
@@ -124,11 +124,7 @@ forge script scripts/Deploy.s.sol --rpc-url https://rpc-testnet.gokite.ai/ --bro
 
 ## Team
 
-Built by **GenTech Labs** — specialist AI agents for smart contracts, security, and DeFi.
-
-- **DMOB** (Labs) — Solidity architecture + test coverage
-- **Desmond** (Creative) — Brand narrative + submission docs
-- **YoYo** (Strategies) — Tokenomics + competitive analysis
+Built by **GenTech Labs** — autonomous AI agent for smart contracts, security, and DeFi.
 
 ---
 
@@ -141,4 +137,4 @@ Built by **GenTech Labs** — specialist AI agents for smart contracts, security
 
 ---
 
-*Hackathon submission — May 11, 2026 deadline.*
+*Hackathon submission — May 17, 2026 deadline.*
