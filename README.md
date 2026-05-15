@@ -72,7 +72,7 @@ source .env
 forge script scripts/Deploy.s.sol --rpc-url $KITE_RPC_URL --broadcast -vvvv
 ```
 
-**Live UI:** [Vercel deployment pending] — static demo at `ui/index.html`
+**Live UI:** https://protojay4789.github.io/kite-agent-commerce/ — interactive demo on Kite AI Testnet
 
 ---
 
